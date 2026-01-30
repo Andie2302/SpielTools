@@ -1,5 +1,3 @@
-using Raylib_cs;
-
 namespace SpielTools;
 
 public class World
@@ -53,17 +51,16 @@ public class World
             entity.Update(deltaTime, this);
         }
     }
-}
 
-public class KeyboardController : IController
-{
-    public GameAction GetAction(Player player, World world)
+    // NEU: Liste für Hindernisse
+    private readonly List<Obstacle> _obstacles = new();
+    public IReadOnlyList<Obstacle> Obstacles => _obstacles;
+
+    // NEU: Methode zum Hinzufügen
+    public void AddObstacle(Obstacle obs)
     {
-        // Raylib fragt direkt die Tastatur ab
-        if (Raylib.IsKeyDown(KeyboardKey.Right)) return GameAction.MoveRight;
-        if (Raylib.IsKeyDown(KeyboardKey.Left)) return GameAction.MoveLeft;
-        if (Raylib.IsKeyPressed(KeyboardKey.Space)) return GameAction.Jump; // KeyPressed = Nur einmal pro Druck
-
-        return GameAction.Idle;
+        _obstacles.Add(obs);
+        Entities.Add(obs); // Auch zur Hauptliste, damit Update() aufgerufen wird
     }
+    
 }
