@@ -1,51 +1,58 @@
 ﻿using System.Numerics;
-using Spiel;
 using SpielTools;
 
-// 1. Welt mit Rampe bauen
+// --- KONFIGURATION ---
+bool useGraphics = true;   // TRUE = Raylib Fenster, FALSE = Nur Konsolentext
+bool useAI = false;         // TRUE = AutoWalker, FALSE = Tastatur
+
+// 1. Welt bauen
 var world = new World();
-world.AddGroundPoint(0, 100);   // Start unten
-world.AddGroundPoint(20, 100);  // Beginn Rampe
-world.AddGroundPoint(40, 50);   // Ende Rampe (oben)
-world.AddGroundPoint(80, 50);   // Plateau
+world.AddGroundPoint(0, 100);
+world.AddGroundPoint(100, 100); // Ebene
+world.AddGroundPoint(200, 50);  // Rampe hoch
+world.AddGroundPoint(300, 50);  // Plateau
+world.AddGroundPoint(400, 200); // Abgrund / Loch
+world.AddGroundPoint(600, 200); 
+
+// 2. Spieler und Controller wählen
 var player = new Player();
-player.Position = new Vector2(10, 50); 
-player.Controller = new AutoWalker(); // <-- WICHTIG: Hier bekommt er das Gehirn
+player.Position = new Vector2(50, 50); // Start in der Luft
+
+if (useAI)
+{
+    // Dein alter AutoWalker Code (kannst du auch in eigene Datei auslagern)
+    player.Controller = new AutoWalker(); 
+}
+else
+{
+    // Falls Grafik an ist, nehmen wir Tastatur. Sonst macht Tastatur keinen Sinn.
+    if (useGraphics) player.Controller = new KeyboardController();
+}
+
 world.Entities.Add(player);
 
-Console.WriteLine("--- TEST: Rampe hochlaufen ---");
 
-// Engine-Setup (optional, du kannst auch direkt world.Update rufen)
-// const float deltaTime = 0.016f; 
-
-// Wir simulieren 200 Frames
-for (var i = 1; i <= 200; i++)
+// 3. STARTEN
+if (useGraphics)
 {
-    world.Update(0.016f);
-    
-    // Ausgabe alle 20 Frames
-    if (i % 20 == 0)
+    // Grafik-Modus: Das Fenster übernimmt die Schleife
+    var renderer = new GameRenderer();
+    renderer.RunWindow(world, player);
+}
+else
+{
+    // Headless-Modus (z.B. für KI-Training auf Server)
+    Console.WriteLine("Starte Simulation ohne Grafik...");
+    for (int i = 0; i < 500; i++)
     {
-        var ort = "LUFT";
-        if (player.Position.Y == 100) ort = "UNTEN";
-        else if (player.Position.Y < 100 && player.Position.Y > 50) ort = "RAMPE";
-        else if (player.Position.Y == 50) ort = "OBEN";
-        
-        Console.WriteLine($"T={i*0.016f:F2}s | X={player.Position.X:F1} Y={player.Position.Y:F1} -> {ort}");
+        world.Update(0.016f);
+        // ... dein alter Logging Code ...
+        if (i % 20 == 0) Console.WriteLine($"T={i}: {player.Position}");
     }
 }
 
-// 2. Ein dummer Bot, der immer nach rechts läuft
-namespace Spiel
+// Hilfsklasse für KI (falls nicht ausgelagert)
+class AutoWalker : IController
 {
-    class AutoWalker : IController
-    {
-        public GameAction GetAction(Player p, World w)
-        {
-            // Einfach immer nach rechts laufen!
-            return GameAction.MoveRight;
-        }
-    }
+    public GameAction GetAction(Player p, World w) => GameAction.MoveRight;
 }
-
-// 3. Spieler mit dem Bot verknüpfen
