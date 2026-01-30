@@ -5,7 +5,7 @@ namespace SpielTools;
 
 public class GameRenderer
 {
-    public static void RunWindow(World world, Player player)
+    public void RunWindow(World world, Player player)
     {
         Raylib.InitWindow(1000, 600, "Jump & Run - Test");
         Raylib.SetTargetFPS(60);
@@ -54,7 +54,7 @@ public class GameRenderer
             // UI Overlay
             Raylib.DrawText($"Pos: {player.Position.X:F1} / {player.Position.Y:F1}", 10, 10, 20, Color.Black);
             if (player.IsGrounded) Raylib.DrawText("BODEN", 10, 30, 20, Color.Green);
-            
+            camera.Target = new Vector2(player.Position.X, player.Position.Y);
             Raylib.EndDrawing();
         }
 
