@@ -77,3 +77,4 @@ public class World
 
 // Wer auch immer den Spieler steuert (Mensch, KI, Test-Skript),
 // muss dieses Interface erfüllen.
+
