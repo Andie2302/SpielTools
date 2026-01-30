@@ -1,10 +1,5 @@
 namespace SpielTools;
 
-/// <summary>
-/// Ein einfacher Punkt in der Landschaft.
-/// </summary>
-public record struct GroundPoint(float X, float Y);
-
 public class World
 {
     // Die Liste muss immer nach X sortiert sein, damit unsere Logik funktioniert!
@@ -79,3 +74,6 @@ public class World
         }
     }
 }
+
+// Wer auch immer den Spieler steuert (Mensch, KI, Test-Skript),
+// muss dieses Interface erfüllen.
