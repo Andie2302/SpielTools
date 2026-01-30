@@ -17,25 +17,7 @@ public class World
     private readonly List<Obstacle> _obstacles = new();
     public IReadOnlyList<Obstacle> Obstacles => _obstacles;
 
-    // --- NEU: Die Reset-Methode ---
-    // Diese Methode setzt alles auf Anfang, wenn du 'R' drückst oder die KI neu startet.
-    public void Reset()
-    {
-        Score = 0;
-        IsGameOver = false;
-
-        foreach (var entity in Entities)
-        {
-            if (entity is Player p)
-            {
-                p.Position = new Vector2(0, 0); // Zurück zum Start (X=0, Y=0)
-                p.Velocity = Vector2.Zero;      // Stop!
-                // Wir setzen intern den "Grounded"-Status zurück, damit er fällt
-                // (Das passiert im nächsten Update automatisch, da er in der Luft startet)
-            }
-        }
-    }
-
+ 
     public void Update(float deltaTime)
     {
         // WICHTIG: Wenn Game Over ist, frieren wir die Welt ein!
@@ -79,4 +61,25 @@ public class World
         _obstacles.Add(obs);
         Entities.Add(obs);
     }
+    
+    // In SpielTools/World.cs
+
+    public void Reset()
+    {
+        Score = 0;
+        IsGameOver = false;
+
+        // Suche den Spieler und setze ihn zurück
+        foreach (var entity in Entities)
+        {
+            if (entity is Player p)
+            {
+                p.Position = new System.Numerics.Vector2(0, 0); // Startpunkt
+                p.Velocity = System.Numerics.Vector2.Zero;      // Stop!
+                p.IsGrounded = false; // Er startet in der Luft
+            }
+        }
+        Console.WriteLine("Spiel wurde zurückgesetzt!");
+    }
+    
 }
