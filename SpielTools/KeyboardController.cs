@@ -1,5 +1,6 @@
 using Raylib_cs;
-using SpielTools;
+
+namespace SpielTools;
 
 public class KeyboardController : IController
 {
