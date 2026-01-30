@@ -1,4 +1,5 @@
 ﻿using System.Numerics;
+using Spiel;
 using SpielTools;
 
 // 1. Welt mit Rampe bauen
@@ -25,7 +26,7 @@ for (var i = 1; i <= 200; i++)
     // Ausgabe alle 20 Frames
     if (i % 20 == 0)
     {
-        string ort = "LUFT";
+        var ort = "LUFT";
         if (player.Position.Y == 100) ort = "UNTEN";
         else if (player.Position.Y < 100 && player.Position.Y > 50) ort = "RAMPE";
         else if (player.Position.Y == 50) ort = "OBEN";
@@ -35,12 +36,15 @@ for (var i = 1; i <= 200; i++)
 }
 
 // 2. Ein dummer Bot, der immer nach rechts läuft
-class AutoWalker : IController
+namespace Spiel
 {
-    public GameAction GetAction(Player p, World w)
+    class AutoWalker : IController
     {
-        // Einfach immer nach rechts laufen!
-        return GameAction.MoveRight;
+        public GameAction GetAction(Player p, World w)
+        {
+            // Einfach immer nach rechts laufen!
+            return GameAction.MoveRight;
+        }
     }
 }
 
