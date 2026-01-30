@@ -2,8 +2,8 @@
 using SpielTools;
 
 // --- KONFIGURATION ---
-bool useGraphics = true;   // TRUE = Raylib Fenster, FALSE = Nur Konsolentext
-bool useAI = false;         // TRUE = AutoWalker, FALSE = Tastatur
+var useGraphics = true;   // TRUE = Raylib Fenster, FALSE = Nur Konsolentext
+var useAi = false;         // TRUE = AutoWalker, FALSE = Tastatur
 
 // 1. Welt bauen
 var world = new World();
@@ -14,11 +14,17 @@ world.AddGroundPoint(300, 50);  // Plateau
 world.AddGroundPoint(400, 200); // Abgrund / Loch
 world.AddGroundPoint(600, 200); 
 
+// Ein Block auf der Ebene (X=150, Breite 20, Höhe 40)
+world.AddObstacle(new Obstacle(150, 0, 20, 40));
+
+// Ein Block mitten auf der Rampe (X=300) - Testet ob er schräg steht!
+world.AddObstacle(new Obstacle(300, 0, 20, 40));
+
 // 2. Spieler und Controller wählen
 var player = new Player();
 player.Position = new Vector2(50, 50); // Start in der Luft
 
-if (useAI)
+if (useAi)
 {
     // Dein alter AutoWalker Code (kannst du auch in eigene Datei auslagern)
     player.Controller = new AutoWalker(); 
@@ -37,13 +43,13 @@ if (useGraphics)
 {
     // Grafik-Modus: Das Fenster übernimmt die Schleife
     var renderer = new GameRenderer();
-    renderer.RunWindow(world, player);
+    GameRenderer.RunWindow(world, player);
 }
 else
 {
     // Headless-Modus (z.B. für KI-Training auf Server)
     Console.WriteLine("Starte Simulation ohne Grafik...");
-    for (int i = 0; i < 500; i++)
+    for (var i = 0; i < 500; i++)
     {
         world.Update(0.016f);
         // ... dein alter Logging Code ...
@@ -52,7 +58,3 @@ else
 }
 
 // Hilfsklasse für KI (falls nicht ausgelagert)
-class AutoWalker : IController
-{
-    public GameAction GetAction(Player p, World w) => GameAction.MoveRight;
-}
