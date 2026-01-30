@@ -5,13 +5,13 @@ namespace SpielTools;
 
 public class GameRenderer
 {
-    public void RunWindow(World world, Player player)
+    public static void RunWindow(World world, Player player)
     {
         Raylib.InitWindow(1000, 600, "Jump & Run - Test");
         Raylib.SetTargetFPS(60);
 
         // Kamera-Setup (damit Y=0 unten ist und Y+ nach oben geht, oder wir zoomen rein)
-        Camera2D camera = new() { Zoom = 1.5f, Offset = new Vector2(50, 400) };
+        Camera2D camera = new() { Zoom = 1.5f, Offset = new Vector2(500, 400) };
 
         while (!Raylib.WindowShouldClose())
         {
@@ -44,6 +44,31 @@ public class GameRenderer
                 Raylib.DrawCircleV(new Vector2(p1.X, p1.Y), 5, Color.DarkGreen);
             }
 
+            
+            // Hindernisse zeichnen (Dunkelgrau)
+            foreach (var obs in world.Obstacles)
+            {
+                // Position ist Unten-Links -> Raylib zeichnet von Oben-Links
+                // Also Y - Höhe
+                Raylib.DrawRectangle(
+                    (int)obs.Position.X, 
+                    (int)(obs.Position.Y - obs.Size.Y), 
+                    (int)obs.Size.X, 
+                    (int)obs.Size.Y, 
+                    Color.DarkGray
+                );
+            }
+
+// Spieler zeichnen (angepasst an die echte Größe)
+            Raylib.DrawRectangle(
+                (int)player.Position.X, 
+                (int)(player.Position.Y - player.Size.Y), 
+                (int)player.Size.X, 
+                (int)player.Size.Y, 
+                Color.Red
+            );
+            
+            
             // Spieler zeichnen (Rotes Rechteck, mittig über dem Punkt)
             // Wir müssen die Position leicht anpassen, da Raylib von oben links zeichnet
             var playerPos = player.Position;
