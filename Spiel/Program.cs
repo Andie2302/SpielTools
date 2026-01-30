@@ -17,7 +17,7 @@ Console.WriteLine($"START: Spieler Y={player.Position.Y} (In der Luft)");
 // Wir nutzen einen festen Takt von 0.016s (ca 60 FPS)
 float deltaTime = 0.016f;
 
-for (int i = 1; i <= 60; i++)
+for (int i = 1; i <= 100; i++)
 {
     // Engine-Schritt
     world.Update(deltaTime);
