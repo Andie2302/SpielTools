@@ -12,4 +12,9 @@ public class World
             entity.Update(deltaTime, this);
         }
     }
+
+    public float GetGroundY(float positionX)
+    {
+        throw new NotImplementedException();
+    }
 }
