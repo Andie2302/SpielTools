@@ -1,15 +1,28 @@
 using Raylib_cs;
-
-namespace SpielTools;
+using SpielTools;
 
 public class KeyboardController : IController
 {
     public GameAction GetAction(Player player, World world)
     {
-        // Raylib fragt direkt die Tastatur ab
-        if (Raylib.IsKeyDown(KeyboardKey.Right)) return GameAction.MoveRight;
-        if (Raylib.IsKeyDown(KeyboardKey.Left)) return GameAction.MoveLeft;
-        if (Raylib.IsKeyPressed(KeyboardKey.Space)) return GameAction.Jump; // KeyPressed = Nur einmal pro Druck
+        // 1. WICHTIG: Sprung zuerst prüfen!
+        // Wir nutzen IsKeyPressed (feuert nur beim ersten Druck), damit der Spieler
+        // im nächsten Frame sofort wieder steuern kann (Air Control).
+        if (Raylib.IsKeyPressed(KeyboardKey.Space)) 
+        {
+            return GameAction.Jump; 
+        }
+
+        // 2. Bewegung prüfen (wird nur erreicht, wenn NICHT gerade gesprungen wurde)
+        if (Raylib.IsKeyDown(KeyboardKey.Right) || Raylib.IsKeyDown(KeyboardKey.D)) 
+        {
+            return GameAction.MoveRight;
+        }
+        
+        if (Raylib.IsKeyDown(KeyboardKey.Left) || Raylib.IsKeyDown(KeyboardKey.A)) 
+        {
+            return GameAction.MoveLeft;
+        }
 
         return GameAction.Idle;
     }
